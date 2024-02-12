@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <math.h>
+
+
+//declarando as variáveis
+int destino;
+int origem;
+int vertices = 0;
+float custo;
+float *custos = NULL;
+
+//Funções
+void opcoes(void);
+void grafo_criar(void);
+void grafo_procurar(void);
+void dijkstra(int vertices, int origem, int destino, float *custos);
+
+//main
+int main(int argc, char** argv) {
+	setlocale(LC_ALL, "Portuguese");
+	printf("O RA do aluno Neemias Piler é 2015628, e será usado para encontrar os pesos de acordo:\n1-2 = 13.1\n1-3 = 0\n2-4 = 6.59\n2-5 = 32.95\n3-2 = 39.54\n3-5 = 13.1\n4-5 = 52.7\n");
+
+	
+	int opt = -1;
+	do{
+		opcoes();
+		scanf("%d", &opt);
+		switch(opt){
+			case 1:
+				grafo_criar();
+				break;
+			case 2:
+				if(vertices > 0){
+					grafo_procurar();
+				}
+			break;
+		}
+	}while(opt != 0);
+	return 0;
+}
+
+//função para inserir os pesos e opções
+void opcoes(void){
+	printf("Atividade MAPA algoritmo Dijkstra\n");
+	printf("opções:\n");
+	printf("\t 1 - Adicionar um grafo\n");
+	printf("\t 2 - procurar menores caminhhos\n");
+	printf("\t 3 - sair da aplicação\n");
+	}
+
+
+	
+void grafo_criar(void){
+	do{
+		printf("\n informe o numero de vertices: ");
+		scanf("%d", &vertices);
+	} while(vertices < 3);
+	if(!custos){
+		free(custos);
+	}
+	custos = (float*) malloc(sizeof(float)*vertices*vertices);
+	if (custos == NULL){
+		printf("erro calculo\n");
+		exit(-1);
+	}
+
+// Matriz
+	for(int i = 0; i <= vertices * vertices;i++){
+	custos[i] = -1;
+} 
+	do{
+	//system("clear");
+	printf("entre com as arestas:\n");
+		do{
+			printf("origem entre 1 e %d ou '0' para sair", vertices);
+			scanf("%d", &origem);
+	} 		while (origem < 0 || origem > vertices);
+	if(origem){
+		do{
+			printf("destino entre 1 e %d, menos %d", vertices, origem);
+			scanf("%d", &destino);
+		}	while(destino < 1 || destino > vertices || destino == origem);
+		do {
+			printf("custo positivo do vertice %d para o vertice %d:", origem, destino);
+			scanf("%f", &custo);
+		}	while (custo < 0 );
+		custos[(origem-1) *vertices + destino - 1] = custo;//verificar se é ponteiro custos
+		}
+	} while(origem);
+}
+
+void grafo_procurar(void){
+	int i, j;
+	system("clear");
+	printf("lista dos menores caminhos no grafo:\n");
+	for(i = 1; i <= vertices; i++){
+		for(j = 1; j <= vertices; j++){
+			dijkstra(vertices, i, j, custos);
+		}
+	}
+	
+}
